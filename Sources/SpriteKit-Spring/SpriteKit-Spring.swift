@@ -179,90 +179,112 @@ public extension SKAction {
 // MARK: - Damping Logic
 
 public extension SKAction {
-    public class func animate<T>(keyPath: ReferenceWritableKeyPath<T, CGFloat>, byValue initialDistance: CGFloat, duration: TimeInterval, delay: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-        return animate(_keyPath: keyPath, byValue: initialDistance, toValue: nil, duration: duration, delay: delay, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
-    }
-    
-    public class func animate<T>(keyPath: ReferenceWritableKeyPath<T, CGFloat>, toValue finalValue: CGFloat, duration: TimeInterval, delay: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-        return animate(_keyPath: keyPath, byValue: nil, toValue: finalValue, duration: duration, delay: delay, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
-    }
-    
-    private class func animate<T>(_keyPath: ReferenceWritableKeyPath<T, CGFloat>, byValue: CGFloat!, toValue: CGFloat!, duration: TimeInterval, delay: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-        var initialValue: CGFloat!
-        var naturalFrequency: CGFloat = 0
-        var dampedFrequency: CGFloat = 0
-        var t1: CGFloat = 0
-        var t2: CGFloat = 0
-        var A: CGFloat = 0
-        var B: CGFloat = 0
-        var finalValue: CGFloat! = toValue
-        var initialDistance: CGFloat! = byValue
-        
-        let animation = SKAction.customAction(withDuration: duration, actionBlock: {
-            (node, elapsedTime) in
-            if let propertyToAnimation = node as? T {
-                if initialValue == nil {
-                    initialValue = propertyToAnimation[keyPath: _keyPath]
-                    initialDistance = initialDistance ?? finalValue - initialValue!
-                    finalValue = finalValue ?? initialValue! + initialDistance
-                    
-                    var magicNumber: CGFloat! // picked manually to visually match the behavior of UIKit
-                    if dampingRatio < 1 { magicNumber = 8 / dampingRatio }
-                    else if dampingRatio == 1 { magicNumber = 10 }
-                    else { magicNumber = 12 * dampingRatio }
-                    
-                    naturalFrequency = magicNumber / CGFloat(duration)
-                    dampedFrequency = naturalFrequency * sqrt(1 - pow(dampingRatio, 2))
-                    t1 = 1 / (naturalFrequency * (dampingRatio - sqrt(pow(dampingRatio, 2) - 1)))
-                    t2 = 1 / (naturalFrequency * (dampingRatio + sqrt(pow(dampingRatio, 2) - 1)))
-                    
-                    if dampingRatio < 1 {
-                        A = initialDistance
-                        B = (dampingRatio * naturalFrequency - velocity) * initialDistance / dampedFrequency
-                    } else if dampingRatio == 1 {
-                        A = initialDistance
-                        B = (naturalFrequency - velocity) * initialDistance
-                    } else {
-                        A = (t1 * t2 / (t1 - t2))
-                        A *= initialDistance * (1/t2 - velocity)
-                        B = (t1 * t2 / (t2 - t1))
-                        B *= initialDistance * (1/t1 - velocity)
-                    }
-                }
-                
-                var currentValue: CGFloat!
-                
-                if elapsedTime < CGFloat(duration) {
-                    
-                    if dampingRatio < 1 {
-                        
-                        let dampingExp:CGFloat = exp(-dampingRatio * naturalFrequency * elapsedTime)
-                        let ADamp:CGFloat = A * cos(dampedFrequency * elapsedTime)
-                        let BDamp:CGFloat = B * sin(dampedFrequency * elapsedTime)
-                        
-                        currentValue = finalValue - dampingExp * (ADamp + BDamp)
-                    } else if dampingRatio == 1 {
-                        
-                        let dampingExp: CGFloat = exp(-dampingRatio * naturalFrequency * elapsedTime)
-                        
-                        currentValue = finalValue - dampingExp * (A + B * elapsedTime)
-                    } else {
-                        
-                        let ADamp:CGFloat =  A * exp(-elapsedTime/t1)
-                        let BDamp:CGFloat = B * exp(-elapsedTime/t2)
-                        currentValue = finalValue - ADamp - BDamp
-                    }
-                } else {
-                    currentValue = finalValue
-                }
-                propertyToAnimation[keyPath: _keyPath] = currentValue
-            }
-        })
-        
-        if delay > 0 {
-            return SKAction.sequence([SKAction.wait(forDuration: delay), animation])
-        } else {
-            return animation
-        }
-    }
+	static func animate<T>(keyPath: ReferenceWritableKeyPath<T, CGFloat>, byValue initialDistance: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
+		animate(keyPath, .changeBy(initialDistance), duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	}
+	
+	static func animate<T>(keyPath: ReferenceWritableKeyPath<T, CGFloat>, toValue finalValue: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
+		animate(keyPath, .changeTo(finalValue), duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	}
+	
+	private static func animate<T>(_ keyPath: ReferenceWritableKeyPath<T, CGFloat>, _ target: Target, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
+		var storedSpring: Spring?
+		
+		return .customAction(withDuration: duration) { node, elapsedTime in
+			guard let holder = node as? T else {
+				fatalError("node to animate did not conform to specified type")
+			}
+			
+			let spring: Spring
+			if let storedSpring = storedSpring {
+				spring = storedSpring
+			} else {
+				spring = Spring(
+					initialValue: holder[keyPath: keyPath],
+					target,
+					duration: duration,
+					dampingRatio: dampingRatio,
+					initialVelocity: velocity
+				)
+				storedSpring = spring
+			}
+			
+			holder[keyPath: keyPath] = spring.value(at: elapsedTime)
+		}
+	}
+	
+	private enum Target {
+		case changeBy(CGFloat)
+		case changeTo(CGFloat)
+	}
+	
+	private struct Spring {
+		private var initialValue: CGFloat
+		private var finalValue: CGFloat
+		private var dampingRatio: CGFloat
+		private var naturalFrequency: CGFloat
+		private var dampedFrequency: CGFloat
+		private var t1, t2: CGFloat
+		private var a, b: CGFloat
+		
+		init(initialValue: CGFloat, _ target: Target, duration: TimeInterval, dampingRatio: CGFloat, initialVelocity: CGFloat) {
+			self.initialValue = initialValue
+			self.dampingRatio = dampingRatio
+			
+			let initialDistance: CGFloat
+			switch target {
+			case .changeBy(let distance):
+				initialDistance = distance
+				finalValue = initialValue + distance
+			case .changeTo(let target):
+				initialDistance = target - initialValue
+				finalValue = target
+			}
+			
+			let magicNumber: CGFloat // picked manually to visually match the behavior of UIKit
+			if dampingRatio < 1 {
+				magicNumber = 8 / dampingRatio
+			} else if dampingRatio == 1 {
+				magicNumber = 10
+			} else {
+				magicNumber = 12 * dampingRatio
+			}
+			
+			naturalFrequency = magicNumber / CGFloat(duration)
+			dampedFrequency = naturalFrequency * sqrt(1 - pow(dampingRatio, 2))
+			t1 = 1 / (naturalFrequency * (dampingRatio - sqrt(pow(dampingRatio, 2) - 1)))
+			t2 = 1 / (naturalFrequency * (dampingRatio + sqrt(pow(dampingRatio, 2) - 1)))
+			
+			if dampingRatio < 1 {
+				a = initialDistance
+				b = (dampingRatio * naturalFrequency - initialVelocity) * initialDistance / dampedFrequency
+			} else if dampingRatio == 1 {
+				a = initialDistance
+				b = (naturalFrequency - initialVelocity) * initialDistance
+			} else {
+				a = (t1 * t2 / (t1 - t2))
+				a *= initialDistance * (1/t2 - initialVelocity)
+				b = (t1 * t2 / (t2 - t1))
+				b *= initialDistance * (1/t1 - initialVelocity)
+			}
+		}
+		
+		func value(at time: CGFloat) -> CGFloat {
+			if dampingRatio < 1 {
+				let dampingExp: CGFloat = exp(-dampingRatio * naturalFrequency * time)
+				let ADamp: CGFloat = a * cos(dampedFrequency * time)
+				let BDamp: CGFloat = b * sin(dampedFrequency * time)
+				
+				return finalValue - dampingExp * (ADamp + BDamp)
+			} else if dampingRatio == 1 {
+				let dampingExp: CGFloat = exp(-dampingRatio * naturalFrequency * time)
+				
+				return finalValue - dampingExp * (a + b * time)
+			} else {
+				let ADamp: CGFloat = a * exp(-time / t1)
+				let BDamp: CGFloat = b * exp(-time / t2)
+				return finalValue - ADamp - BDamp
+			}
+		}
+	}
 }
