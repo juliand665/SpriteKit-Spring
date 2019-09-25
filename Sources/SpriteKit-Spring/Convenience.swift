@@ -3,90 +3,90 @@ import SpriteKit
 // MARK: - Move
 
 public extension SKAction {
-	static func move(by delta: CGVector, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
+	static func move(by delta: CGVector, using properties: SpringAnimationProperties) -> SKAction {
 		.group([
-			animate(keyPath: \SKNode.position.x, byValue: delta.dx, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity),
-			animate(keyPath: \SKNode.position.y, byValue: delta.dy, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity),
+			animate(\SKNode.position.x, .changeBy(delta.dx), using: properties),
+			animate(\SKNode.position.y, .changeBy(delta.dy), using: properties),
 		])
 	}
 	
-	static func move(to location: CGPoint, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
+	static func move(to location: CGPoint, using properties: SpringAnimationProperties) -> SKAction {
 		.group([
-			animate(keyPath: \SKNode.position.x, toValue: location.x, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity),
-			animate(keyPath: \SKNode.position.y, toValue: location.y, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity),
+			animate(\SKNode.position.x, .changeTo(location.x), using: properties),
+			animate(\SKNode.position.y, .changeTo(location.y), using: properties),
 		])
 	}
 	
-	static func moveBy(x deltaX: CGFloat, y deltaY: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
+	static func moveBy(x deltaX: CGFloat, y deltaY: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
 		.group([
-			animate(keyPath: \SKNode.position.x, byValue: deltaX, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity),
-			animate(keyPath: \SKNode.position.y, byValue: deltaY, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity),
+			animate(\SKNode.position.x, .changeBy(deltaX), using: properties),
+			animate(\SKNode.position.y, .changeBy(deltaY), using: properties),
 		])
 	}
 	
-	static func moveTo(x: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKNode.position.x, toValue: x, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func moveTo(x: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKNode.position.x, .changeTo(x), using: properties)
 	}
 	
-	static func moveTo(y: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKNode.position.y, toValue: y, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func moveTo(y: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKNode.position.y, .changeTo(y), using: properties)
 	}
 }
 
 // MARK: - Rotate
 
 public extension SKAction {
-	static func rotate(byAngle radians: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKNode.zRotation, byValue: radians, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func rotate(byAngle radians: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKNode.zRotation, .changeBy(radians), using: properties)
 	}
 	
-	static func rotate(toAngle radians: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKNode.zRotation, toValue: radians, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func rotate(toAngle radians: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKNode.zRotation, .changeTo(radians), using: properties)
 	}
 }
 
 // MARK: - Speed
 
 public extension SKAction {
-	static func speed(by speed: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKNode.speed, byValue: speed, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func speed(by speed: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKNode.speed, .changeBy(speed), using: properties)
 	}
 	
-	static func speed(to speed: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKNode.speed, toValue: speed, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func speed(to speed: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKNode.speed, .changeTo(speed), using: properties)
 	}
 }
 
 // MARK: - Scale
 
 public extension SKAction {
-	static func scale(by scale: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		scaleX(by: scale, y: scale, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func scale(by scale: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		scaleX(by: scale, y: scale, using: properties)
 	}
 	
-	static func scale(to scale: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		scaleX(to: scale, y: scale, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func scale(to scale: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		scaleX(to: scale, y: scale, using: properties)
 	}
 	
-	static func scaleX(by xScale: CGFloat, y yScale: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
+	static func scaleX(by xScale: CGFloat, y yScale: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
 		.group([
-			animate(keyPath: \SKNode.xScale, byValue: xScale, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity),
-			animate(keyPath: \SKNode.yScale, byValue: yScale, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity),
+			animate(\SKNode.xScale, .changeBy(xScale), using: properties),
+			animate(\SKNode.yScale, .changeBy(yScale), using: properties),
 		])
 	}
 	
-	static func scaleX(to scale: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKNode.xScale, toValue: scale, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func scaleX(to scale: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKNode.xScale, .changeTo(scale), using: properties)
 	}
 	
-	static func scaleY(to scale: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKNode.yScale, toValue: scale, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func scaleY(to scale: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKNode.yScale, .changeTo(scale), using: properties)
 	}
 	
-	static func scaleX(to xScale: CGFloat, y yScale: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
+	static func scaleX(to xScale: CGFloat, y yScale: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
 		.group([
-			scaleX(to: xScale, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity),
-			scaleY(to: yScale, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity),
+			scaleX(to: xScale, using: properties),
+			scaleY(to: yScale, using: properties),
 		])
 	}
 }
@@ -94,45 +94,45 @@ public extension SKAction {
 // MARK: - Fade
 
 public extension SKAction {
-	static func fadeIn(withDuration duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKNode.alpha, toValue: 1, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func fadeIn(using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKNode.alpha, .changeTo(1), using: properties)
 	}
 	
-	static func fadeOut(withDuration duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKNode.alpha, toValue: 0, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func fadeOut(using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKNode.alpha, .changeTo(0), using: properties)
 	}
 	
-	static func fadeAlpha(by factor: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKNode.alpha, byValue: factor, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func fadeAlpha(by factor: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKNode.alpha, .changeBy(factor), using: properties)
 	}
 	
-	static func fadeAlpha(to factor: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKNode.alpha, toValue: factor, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func fadeAlpha(to factor: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKNode.alpha, .changeTo(factor), using: properties)
 	}
 }
 
 // MARK: - Resize
 
 public extension SKAction {
-	static func resize(toWidth width: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKSpriteNode.size.width, toValue: width, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func resize(toWidth width: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKSpriteNode.size.width, .changeTo(width), using: properties)
 	}
 	
-	static func resize(toHeight height: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKSpriteNode.size.height, toValue: height, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func resize(toHeight height: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKSpriteNode.size.height, .changeTo(height), using: properties)
 	}
 	
-	static func resize(byWidth width: CGFloat, height: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
+	static func resize(byWidth width: CGFloat, height: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
 		.group([
-			animate(keyPath: \SKSpriteNode.size.width, byValue: width, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity),
-			animate(keyPath: \SKSpriteNode.size.height, byValue: height, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity),
+			animate(\SKSpriteNode.size.width, .changeBy(width), using: properties),
+			animate(\SKSpriteNode.size.height, .changeBy(height), using: properties),
 		])
 	}
 	
-	static func resize(toWidth width: CGFloat, height: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
+	static func resize(toWidth width: CGFloat, height: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
 		.group([
-			resize(toWidth: width, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity),
-			resize(toHeight: height, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity),
+			resize(toWidth: width, using: properties),
+			resize(toHeight: height, using: properties),
 		])
 	}
 }
@@ -140,7 +140,7 @@ public extension SKAction {
 // MARK: - Colorize
 
 public extension SKAction {
-	static func colorize(withColorBlendFactor colorBlendFactor: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
-		animate(keyPath: \SKSpriteNode.colorBlendFactor, toValue: colorBlendFactor, duration: duration, usingSpringWithDamping: dampingRatio, initialSpringVelocity: velocity)
+	static func colorize(withColorBlendFactor colorBlendFactor: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKSpriteNode.colorBlendFactor, .changeTo(colorBlendFactor), using: properties)
 	}
 }

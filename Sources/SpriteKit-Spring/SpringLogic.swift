@@ -1,52 +1,15 @@
 import SpriteKit
 
 public extension SKAction {
-	static func animate<T>(
-		keyPath: ReferenceWritableKeyPath<T, CGFloat>,
-		byValue initialDistance: CGFloat,
-		duration: TimeInterval,
-		usingSpringWithDamping dampingRatio: CGFloat,
-		initialSpringVelocity velocity: CGFloat
-	) -> SKAction {
-		animate(
-			keyPath,
-			using: .init(
-				target: .changeBy(initialDistance),
-				duration: duration,
-				dampingRatio: dampingRatio,
-				initialVelocity: velocity
-			)
-		)
-	}
-	
-	static func animate<T>(
-		keyPath: ReferenceWritableKeyPath<T, CGFloat>,
-		toValue finalValue: CGFloat,
-		duration: TimeInterval,
-		usingSpringWithDamping dampingRatio: CGFloat,
-		initialSpringVelocity velocity: CGFloat
-	) -> SKAction {
-		animate(
-			keyPath,
-			using: .init(
-				target: .changeTo(finalValue),
-				duration: duration,
-				dampingRatio: dampingRatio,
-				initialVelocity: velocity
-			)
-		)
-	}
-}
-
-extension SKAction {
-	private static func animate<T>(
-		_ keyPath: ReferenceWritableKeyPath<T, CGFloat>,
-		using properties: Properties
-	) -> SKAction {
+	static func animate<Node>(
+		_ keyPath: ReferenceWritableKeyPath<Node, CGFloat>,
+		_ target: ValueTransformation,
+		using properties: SpringAnimationProperties
+	) -> SKAction where Node: SKNode {
 		var storedSpring: Spring?
 		
 		return .customAction(withDuration: properties.duration) { node, elapsedTime in
-			guard let holder = node as? T else {
+			guard let node = node as? Node else {
 				fatalError("node to animate did not conform to specified type")
 			}
 			
@@ -55,26 +18,27 @@ extension SKAction {
 				spring = storedSpring
 			} else {
 				spring = Spring(
-					initialValue: holder[keyPath: keyPath],
+					target,
+					initialValue: node[keyPath: keyPath],
 					using: properties
 				)
 				storedSpring = spring
 			}
 			
-			holder[keyPath: keyPath] = spring.value(at: elapsedTime)
+			node[keyPath: keyPath] = spring.value(at: elapsedTime)
 		}
 	}
-}
-
-struct Properties {
-	let target: Target
-	let duration: TimeInterval
-	let dampingRatio: CGFloat
-	let initialVelocity: CGFloat
 	
-	enum Target {
+	enum ValueTransformation {
 		case changeBy(CGFloat)
 		case changeTo(CGFloat)
+	}
+
+	struct SpringAnimationProperties {
+		let target: ValueTransformation
+		let duration: TimeInterval
+		let dampingRatio: CGFloat
+		let initialVelocity: CGFloat
 	}
 }
 
@@ -87,12 +51,16 @@ private struct Spring {
 	private var t1, t2: CGFloat
 	private var a, b: CGFloat
 	
-	init(initialValue: CGFloat, using properties: Properties) {
+	init(
+		_ transformation: SKAction.ValueTransformation,
+		initialValue: CGFloat,
+		using properties: SKAction.SpringAnimationProperties
+	) {
 		self.initialValue = initialValue
 		self.dampingRatio = properties.dampingRatio
 		
 		let initialDistance: CGFloat
-		switch properties.target {
+		switch transformation {
 		case .changeBy(let distance):
 			initialDistance = distance
 			finalValue = initialValue + distance
@@ -132,18 +100,18 @@ private struct Spring {
 	
 	func value(at time: CGFloat) -> CGFloat {
 		if dampingRatio < 1 {
-			let dampingExp: CGFloat = exp(-dampingRatio * naturalFrequency * time)
-			let ADamp: CGFloat = a * cos(dampedFrequency * time)
-			let BDamp: CGFloat = b * sin(dampedFrequency * time)
+			let dampingExp = exp(-dampingRatio * naturalFrequency * time)
+			let dampenedA = a * cos(dampedFrequency * time)
+			let dampenedB = b * sin(dampedFrequency * time)
 			
-			return finalValue - dampingExp * (ADamp + BDamp)
+			return finalValue - dampingExp * (dampenedA + dampenedB)
 		} else if dampingRatio == 1 {
-			let dampingExp: CGFloat = exp(-dampingRatio * naturalFrequency * time)
+			let dampingExp = exp(-dampingRatio * naturalFrequency * time)
 			
 			return finalValue - dampingExp * (a + b * time)
 		} else {
-			let ADamp: CGFloat = a * exp(-time / t1)
-			let BDamp: CGFloat = b * exp(-time / t2)
+			let ADamp = a * exp(-time / t1)
+			let BDamp = b * exp(-time / t2)
 			return finalValue - ADamp - BDamp
 		}
 	}
