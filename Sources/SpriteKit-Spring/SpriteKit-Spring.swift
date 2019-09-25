@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //  Copyright 2014 Alexis Taugeron
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,10 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
-////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import SpriteKit
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// MARK: Move
+// MARK: - Move
 
 public extension SKAction {
 	static func move(by delta: CGVector, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
@@ -51,8 +49,7 @@ public extension SKAction {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// MARK: Rotate
+// MARK: - Rotate
 
 public extension SKAction {
 	static func rotate(byAngle radians: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
@@ -65,8 +62,7 @@ public extension SKAction {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// MARK: Speed
+// MARK: - Speed
 
 public extension SKAction {
 	static func speed(by speed: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
@@ -79,8 +75,7 @@ public extension SKAction {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// MARK: Scale
+// MARK: - Scale
 
 public extension SKAction {
 	static func scale(by scale: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
@@ -115,8 +110,7 @@ public extension SKAction {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// MARK: Fade
+// MARK: - Fade
 
 public extension SKAction {
 	static func fadeIn(withDuration duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
@@ -137,8 +131,7 @@ public extension SKAction {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// MARK: Resize
+// MARK: - Resize
 
 public extension SKAction {
 	static func resize(toWidth width: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
@@ -165,8 +158,7 @@ public extension SKAction {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// MARK: Colorize
+// MARK: - Colorize
 
 public extension SKAction {
 	static func colorize(withColorBlendFactor colorBlendFactor: CGFloat, duration: TimeInterval, usingSpringWithDamping dampingRatio: CGFloat, initialSpringVelocity velocity: CGFloat) -> SKAction {
@@ -175,7 +167,6 @@ public extension SKAction {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
 // MARK: - Damping Logic
 
 public extension SKAction {
