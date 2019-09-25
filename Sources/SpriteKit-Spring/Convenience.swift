@@ -5,31 +5,31 @@ import SpriteKit
 public extension SKAction {
 	static func move(by delta: CGVector, using properties: SpringAnimationProperties) -> SKAction {
 		.group([
-			animate(\SKNode.position.x, .changeBy(delta.dx), using: properties),
-			animate(\SKNode.position.y, .changeBy(delta.dy), using: properties),
+			animate(\SKNode.position.x, .add(delta.dx), using: properties),
+			animate(\SKNode.position.y, .add(delta.dy), using: properties),
 		])
 	}
 	
 	static func move(to location: CGPoint, using properties: SpringAnimationProperties) -> SKAction {
 		.group([
-			animate(\SKNode.position.x, .changeTo(location.x), using: properties),
-			animate(\SKNode.position.y, .changeTo(location.y), using: properties),
+			animate(\SKNode.position.x, .change(to: location.x), using: properties),
+			animate(\SKNode.position.y, .change(to: location.y), using: properties),
 		])
 	}
 	
 	static func moveBy(x deltaX: CGFloat, y deltaY: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
 		.group([
-			animate(\SKNode.position.x, .changeBy(deltaX), using: properties),
-			animate(\SKNode.position.y, .changeBy(deltaY), using: properties),
+			animate(\SKNode.position.x, .add(deltaX), using: properties),
+			animate(\SKNode.position.y, .add(deltaY), using: properties),
 		])
 	}
 	
 	static func moveTo(x: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKNode.position.x, .changeTo(x), using: properties)
+		animate(\SKNode.position.x, .change(to: x), using: properties)
 	}
 	
 	static func moveTo(y: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKNode.position.y, .changeTo(y), using: properties)
+		animate(\SKNode.position.y, .change(to: y), using: properties)
 	}
 }
 
@@ -37,11 +37,11 @@ public extension SKAction {
 
 public extension SKAction {
 	static func rotate(byAngle radians: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKNode.zRotation, .changeBy(radians), using: properties)
+		animate(\SKNode.zRotation, .add(radians), using: properties)
 	}
 	
 	static func rotate(toAngle radians: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKNode.zRotation, .changeTo(radians), using: properties)
+		animate(\SKNode.zRotation, .change(to: radians), using: properties)
 	}
 }
 
@@ -49,11 +49,11 @@ public extension SKAction {
 
 public extension SKAction {
 	static func speed(by speed: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKNode.speed, .changeBy(speed), using: properties)
+		animate(\SKNode.speed, .multiply(by: speed), using: properties)
 	}
 	
 	static func speed(to speed: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKNode.speed, .changeTo(speed), using: properties)
+		animate(\SKNode.speed, .change(to: speed), using: properties)
 	}
 }
 
@@ -61,32 +61,32 @@ public extension SKAction {
 
 public extension SKAction {
 	static func scale(by scale: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		scaleX(by: scale, y: scale, using: properties)
+		scaleBy(x: scale, y: scale, using: properties)
 	}
 	
 	static func scale(to scale: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		scaleX(to: scale, y: scale, using: properties)
+		scaleTo(x: scale, y: scale, using: properties)
 	}
 	
-	static func scaleX(by xScale: CGFloat, y yScale: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+	static func scaleBy(x: CGFloat, y: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
 		.group([
-			animate(\SKNode.xScale, .changeBy(xScale), using: properties),
-			animate(\SKNode.yScale, .changeBy(yScale), using: properties),
+			animate(\SKNode.xScale, .multiply(by: x), using: properties),
+			animate(\SKNode.yScale, .multiply(by: y), using: properties),
 		])
 	}
 	
-	static func scaleX(to scale: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKNode.xScale, .changeTo(scale), using: properties)
+	static func scaleTo(x scale: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKNode.xScale, .change(to: scale), using: properties)
 	}
 	
-	static func scaleY(to scale: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKNode.yScale, .changeTo(scale), using: properties)
+	static func scaleTo(y scale: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKNode.yScale, .change(to: scale), using: properties)
 	}
 	
-	static func scaleX(to xScale: CGFloat, y yScale: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+	static func scaleTo(x: CGFloat, y: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
 		.group([
-			scaleX(to: xScale, using: properties),
-			scaleY(to: yScale, using: properties),
+			scaleTo(x: x, using: properties),
+			scaleTo(y: y, using: properties),
 		])
 	}
 }
@@ -95,44 +95,44 @@ public extension SKAction {
 
 public extension SKAction {
 	static func fadeIn(using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKNode.alpha, .changeTo(1), using: properties)
+		animate(\SKNode.alpha, .change(to: 1), using: properties)
 	}
 	
 	static func fadeOut(using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKNode.alpha, .changeTo(0), using: properties)
+		animate(\SKNode.alpha, .change(to: 0), using: properties)
 	}
 	
 	static func fadeAlpha(by factor: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKNode.alpha, .changeBy(factor), using: properties)
+		animate(\SKNode.alpha, .multiply(by: factor), using: properties)
 	}
 	
 	static func fadeAlpha(to factor: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKNode.alpha, .changeTo(factor), using: properties)
+		animate(\SKNode.alpha, .change(to: factor), using: properties)
 	}
 }
 
 // MARK: - Resize
 
 public extension SKAction {
-	static func resize(toWidth width: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKSpriteNode.size.width, .changeTo(width), using: properties)
+	static func resizeTo(width: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKSpriteNode.size.width, .change(to: width), using: properties)
 	}
 	
-	static func resize(toHeight height: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKSpriteNode.size.height, .changeTo(height), using: properties)
+	static func resizeTo(height: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+		animate(\SKSpriteNode.size.height, .change(to: height), using: properties)
 	}
 	
-	static func resize(byWidth width: CGFloat, height: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+	static func resizeBy(width: CGFloat, height: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
 		.group([
-			animate(\SKSpriteNode.size.width, .changeBy(width), using: properties),
-			animate(\SKSpriteNode.size.height, .changeBy(height), using: properties),
+			animate(\SKSpriteNode.size.width, .add(width), using: properties),
+			animate(\SKSpriteNode.size.height, .add(height), using: properties),
 		])
 	}
 	
-	static func resize(toWidth width: CGFloat, height: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
+	static func resizeTo(width: CGFloat, height: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
 		.group([
-			resize(toWidth: width, using: properties),
-			resize(toHeight: height, using: properties),
+			resizeTo(width: width, using: properties),
+			resizeTo(height: height, using: properties),
 		])
 	}
 }
@@ -141,6 +141,6 @@ public extension SKAction {
 
 public extension SKAction {
 	static func colorize(withColorBlendFactor colorBlendFactor: CGFloat, using properties: SpringAnimationProperties) -> SKAction {
-		animate(\SKSpriteNode.colorBlendFactor, .changeTo(colorBlendFactor), using: properties)
+		animate(\SKSpriteNode.colorBlendFactor, .change(to: colorBlendFactor), using: properties)
 	}
 }

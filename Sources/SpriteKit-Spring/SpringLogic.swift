@@ -30,8 +30,9 @@ public extension SKAction {
 	}
 	
 	enum ValueTransformation {
-		case changeBy(CGFloat)
-		case changeTo(CGFloat)
+		case change(to: CGFloat)
+		case add(CGFloat)
+		case multiply(by: CGFloat)
 	}
 
 	struct SpringAnimationProperties {
@@ -61,10 +62,13 @@ private struct Spring {
 		
 		let initialDistance: CGFloat
 		switch transformation {
-		case .changeBy(let distance):
-			initialDistance = distance
-			finalValue = initialValue + distance
-		case .changeTo(let target):
+		case .add(let offset):
+			initialDistance = offset
+			finalValue = initialValue + offset
+		case .multiply(by: let factor):
+			finalValue = initialValue * factor
+			initialDistance = finalValue - initialValue
+		case .change(to: let target):
 			initialDistance = target - initialValue
 			finalValue = target
 		}
