@@ -101,5 +101,18 @@ public enum Spring {
 		For example, an initial velocity of 2 means the spring would be moving fast enough to cover the entire distance twice over the course of the animation if it were moving at a constant speed.
 		*/
 		let initialVelocity: Float
+		
+		/**
+		Check out the individual properties' documentation for additional information.
+		
+		- Parameters:
+			- dampingRatio: The ratio of the spring's damping coefficient to its critical damping coefficient.
+			- initialVelocity: How fast the spring is initially moving, relative to the total distance to cover and the total duration.
+		*/
+		public init(dampingRatio: Float, initialVelocity: Float) {
+			self.dampingRatio = dampingRatio
+			
+			self.initialVelocity = initialVelocity
+		}
 	}
 }
