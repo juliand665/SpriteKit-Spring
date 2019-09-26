@@ -3,24 +3,15 @@ import SpriteKit
 public extension SKAction {
 	static func animate<Node>(
 		_ keyPath: ReferenceWritableKeyPath<Node, CGFloat>,
-		_ target: ValueTransformation,
+		_ transformation: ValueTransformation,
 		using settings: SpringAnimationSettings
 	) -> SKAction where Node: SKNode {
 		let function = Spring.timingFunction(with: settings.springProperties)
-		let duration = settings.duration
-		return .customAction(withDuration: duration) { node, elapsedTime in
-			guard let node = node as? Node else {
-				fatalError("node to animate did not conform to specified type")
-			}
-			
-			let value = function(Float(elapsedTime))
-			node[keyPath: keyPath] = CGFloat(value)
+		let duration = CGFloat(settings.duration)
+		let applier = transformation.valueApplier(on: keyPath)
+		return .customAction(withDuration: settings.duration) { node, elapsedTime in
+			applier(node as! Node, function(elapsedTime / duration))
 		}
-	}
-	
-	func usingSpring(with properties: Spring.Properties) -> Self {
-		timingFunction = Spring.timingFunction(with: properties)
-		return self
 	}
 	
 	struct SpringAnimationSettings {
@@ -46,21 +37,21 @@ public extension SKAction {
 				var _initialValue: CGFloat?
 				return { node, springValue in
 					guard let initialValue = _initialValue else {
-						initialValue = finalValue
+						_initialValue = finalValue
 						return
 					}
 					node[keyPath: keyPath] = finalValue + springValue * (finalValue - initialValue)
 				}
 				
 			case .add(let offset): // overall always applies the given offset, also working in parallel with other .add transformations
-				var lastSpringValue: CGFloat = 0.0
+				var lastSpringValue = 0.0
 				return { node, springValue in
 					node[keyPath: keyPath] += (springValue - lastSpringValue) * offset
 					lastSpringValue = springValue
 				}
 				
 			case .multiply(by: let factor): // overall always applies the given offset, also working in parallel with other .multiply transformations
-				var lastMultiplier: CGFloat = 1.0
+				var lastMultiplier = 1.0
 				return { node, springValue in
 					let multiplier = (factor - 1) * springValue + 1
 					node[keyPath: keyPath] *= multiplier / lastMultiplier
@@ -71,10 +62,10 @@ public extension SKAction {
 	}
 }
 
-private typealias FloatLiteralType = Float
+private typealias FloatLiteralType = CGFloat
 
 public enum Spring {
-	public static func timingFunction(with properties: Properties) -> (Float) -> Float {
+	public static func timingFunction(with properties: Properties) -> (CGFloat) -> CGFloat {
 		// lots of math adapted from http://www.ryanjuckett.com/programming/damped-springs/
 		
 		let damping = Damping(ratio: properties.dampingRatio)
@@ -87,6 +78,7 @@ public enum Spring {
 			let coefficient = (ratio * naturalFrequency + initialVelocity) / dampedFrequency
 			
 			return { time in
+				guard time < 1 else { return 1 }
 				let dampingExp = exp(-naturalFrequency * ratio * time)
 				let scaledFrequency = dampedFrequency * time
 				let dampened1 = cos(scaledFrequency)
@@ -98,6 +90,7 @@ public enum Spring {
 			let coefficient = initialVelocity + naturalFrequency
 			
 			return { time in
+			guard time < 1 else { return 1 }
 				let dampingExp = exp(-naturalFrequency * time)
 				return 1 - (coefficient * time + 1) * dampingExp
 			}
@@ -110,6 +103,7 @@ public enum Spring {
 			let coefficient2 = 1 - coefficient1
 			
 			return { time in
+			guard time < 1 else { return 1 }
 				let dampened1 = coefficient1 * exp(z1 * time)
 				let dampened2 = coefficient2 * exp(z2 * time)
 				return 1 - (dampened1 + dampened2)
@@ -118,11 +112,11 @@ public enum Spring {
 	}
 	
 	private enum Damping {
-		case underdamped(_ ratio: Float)
+		case underdamped(_ ratio: CGFloat)
 		case criticallyDamped
-		case overdamped(_ ratio: Float)
+		case overdamped(_ ratio: CGFloat)
 		
-		var naturalFrequency: Float {
+		var naturalFrequency: CGFloat {
 			// picked manually to visually match the behavior of UIKit
 			switch self {
 			case .underdamped(let ratio):
@@ -134,7 +128,7 @@ public enum Spring {
 			}
 		}
 		
-		init(ratio: Float) {
+		init(ratio: CGFloat) {
 			precondition(ratio > 0, "invalid damping ratio!")
 			
 			if ratio < 1 {
@@ -157,14 +151,14 @@ public enum Spring {
 		- `1`: **critically damped**; the spring will reach its resting position in minimal time
 		- `1...`: **overdamped**; the spring won't overshoot but will take longer due to being slowed down
 		*/
-		let dampingRatio: Float
+		let dampingRatio: CGFloat
 		
 		/**
 		How fast the spring is initially moving, relative to the total distance to cover and the total duration.
 		
 		For example, an initial velocity of 2 means the spring would be moving fast enough to cover the entire distance twice over the course of the animation if it were moving at a constant speed.
 		*/
-		let initialVelocity: Float
+		let initialVelocity: CGFloat
 		
 		/**
 		Check out the individual properties' documentation for additional information.
@@ -173,7 +167,7 @@ public enum Spring {
 		- dampingRatio: The ratio of the spring's damping coefficient to its critical damping coefficient.
 		- initialVelocity: How fast the spring is initially moving, relative to the total distance to cover and the total duration.
 		*/
-		public init(dampingRatio: Float, initialVelocity: Float) {
+		public init(dampingRatio: CGFloat, initialVelocity: CGFloat) {
 			self.dampingRatio = dampingRatio
 			
 			self.initialVelocity = initialVelocity
