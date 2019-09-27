@@ -63,7 +63,7 @@ public extension SKAction {
 						_initialValue = node[keyPath: keyPath]
 						return
 					}
-					node[keyPath: keyPath] = finalValue + springValue * (finalValue - initialValue)
+					node[keyPath: keyPath] = initialValue + springValue * (finalValue - initialValue)
 				}
 				
 			case .add(let offset): // overall always applies the given offset, also working in parallel with other .add transformations
