@@ -60,7 +60,7 @@ public extension SKAction {
 				var _initialValue: CGFloat?
 				return { node, springValue in
 					guard let initialValue = _initialValue else {
-						_initialValue = finalValue
+						_initialValue = node[keyPath: keyPath]
 						return
 					}
 					node[keyPath: keyPath] = finalValue + springValue * (finalValue - initialValue)
