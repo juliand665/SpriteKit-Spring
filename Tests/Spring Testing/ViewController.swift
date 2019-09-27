@@ -49,29 +49,30 @@ final class ViewController: UIViewController {
 	}
 }
 
-let unit: CGFloat = 100
+let unit: CGFloat = 25
 
 final class Scene: SKScene {
-	lazy var node = SKShapeNode(rectOf: CGSize(width: unit, height: unit)) <- {
+	lazy var node = SKShapeNode(rectOf: CGSize(width: 4 * unit, height: 4 * unit)) <- {
 		$0.fillColor = .systemIndigo
 		$0.strokeColor = .clear
-		$0.position = CGPoint(x: unit / 2, y: unit / 2)
+		$0.position = CGPoint(x: 2 * unit, y: 2 * unit)
 	}
 	
 	override init() {
-		super.init(size: CGSize(width: unit, height: 3 * unit))
+		super.init(size: CGSize(width: 4 * unit, height: 12 * unit))
 		
 		backgroundColor = .clear
-		
-		addChild(node)
 		
 		SKShapeNode(rectOf: size) <- {
 			$0.fillColor = .systemIndigo
 			$0.strokeColor = .clear
 			$0.alpha = 0.2
-			$0.position = CGPoint(x: unit * 0.5, y: unit * 1.5)
+			$0.position = CGPoint(x: size.width / 2, y: size.height / 2)
+			$0.zPosition = -100
 			addChild($0)
 		}
+		
+		addChild(node)
 	}
 	
 	required init?(coder: NSCoder) {
@@ -87,7 +88,7 @@ final class Scene: SKScene {
 				initialVelocity: 0
 			)
 		)
-		node.run(.moveBy(x: 0, y: (shouldMoveUp ? 2 : -2) * unit as CGFloat, using: settings))
+		node.run(.moveBy(x: 0, y: (shouldMoveUp ? 1 : -1) * 8 * unit, using: settings))
 		shouldMoveUp.toggle()
 	}
 }
