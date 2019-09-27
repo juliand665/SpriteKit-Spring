@@ -17,6 +17,10 @@ In iOS 7, Apple introduced spring animations in UIKit by adding a new animation 
 
 This library replicates this feature by adding a spring variant to most factory methods of SKAction. It's not perfect, but it aims to mimic UIKit behavior as closely as possible.
 
+## Caveats
+
+While generally `SKAction`s are expected to be reusable, that is all but impossible with custom actions due to the way SpriteKit calls them. So you'll have to make do with **creating a new action every time you run one**, or else you're going to run into undefined behavior (it might work in some specific cases, but as a rule of thumb, it doesn't).
+
 ## Examples
 
 ### Move
