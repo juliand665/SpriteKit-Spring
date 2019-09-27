@@ -37,6 +37,14 @@ public extension SKAction {
 			self.duration = duration
 			self.springProperties = springProperties
 		}
+		
+		public init(duration: TimeInterval, dampingRatio: CGFloat, initialVelocity: CGFloat) {
+			self.duration = duration
+			self.springProperties = .init(
+				dampingRatio: dampingRatio,
+				initialVelocity: initialVelocity
+			)
+		}
 	}
 
 	enum ValueTransformation {
