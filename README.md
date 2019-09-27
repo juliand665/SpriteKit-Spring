@@ -1,11 +1,11 @@
-SpriteKit-Spring
+SpriteKitSpring
 ================
 
-SpriteKit-Spring is a set of extensions to perform spring animations with SpriteKit.
+SpriteKitSpring is a set of extensions to perform spring animations with SpriteKit.
 
 ## Installation
 
-This project uses the Swift Package Manager. Simply add `.package(url: "https://github.com/juliand665/SpriteKit-Spring.git", .branch("master"))` to the `dependencies` in your `Package.swift` file.
+This project uses the Swift Package Manager. Simply add `.package(url: "https://github.com/juliand665/SpriteKitSpring.git", .branch("master"))` to the overall `dependencies` and `"SpriteKitSpring"` to the target-specific `dependencies` in your `Package.swift` file.
 
 #### Swift:
 ```swift
@@ -13,11 +13,9 @@ import SpriteKit_Spring
 ```
 ## Usage
 
-In iOS 7, Apple introduced spring animations in UIKit by adding a new animation method on UIView (see [WWDC video](https://developer.apple.com/videos/wwdc/2014/#221) and [UIView documentation](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIView_Class/index.html#//apple_ref/occ/clm/UIView/animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:)).
+In iOS 7, Apple introduced spring animations in UIKit by adding a new animation method on UIView (see [UIView documentation](https://developer.apple.com/documentation/uikit/uiview/1622594-animate)).
 
 This library replicates this feature by adding a spring variant to most factory methods of SKAction. It's not perfect, but it aims to mimic UIKit behavior as closely as possible.
-
-See below for examples.
 
 ## Examples
 
@@ -43,7 +41,7 @@ node.run(
 ```swift
 node.run(
 	.scaleTo(
-		x: 0, y: 200,
+		x: 2, y: 0.5,
 		using: SKAction.SpringAnimationSettings(
 			duration: 5,
 			dampingRatio: 0.2,
@@ -84,4 +82,4 @@ node.run(
 
 ## License
 
-SpriteKit-Spring is released under the Apache 2 license. See LICENSE for details.
+SpriteKitSpring is released under the Apache 2 license. See LICENSE for details.

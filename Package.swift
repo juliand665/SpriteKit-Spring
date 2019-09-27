@@ -3,17 +3,17 @@
 import PackageDescription
 
 let package = Package(
-	name: "SpriteKit-Spring",
+	name: "SpriteKitSpring",
 	products: [
 		.library(
-			name: "SpriteKit-Spring",
-			targets: ["SpriteKit-Spring"]
+			name: "SpriteKitSpring",
+			targets: ["SpriteKitSpring"]
 		),
 	],
 	dependencies: [],
 	targets: [
 		.target(
-			name: "SpriteKit-Spring",
+			name: "SpriteKitSpring",
 			dependencies: []
 		),
 	]
