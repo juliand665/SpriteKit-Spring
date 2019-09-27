@@ -73,6 +73,33 @@ final class Scene: SKScene {
 		}
 		
 		addChild(node)
+		
+		let xScale: CGFloat = 0.5
+		let yScale: CGFloat = 0.25
+		node.xScale = xScale
+		node.yScale = yScale
+		// these concurrent relative scale actions work just fine!
+		node.run(.sequence([
+			.wait(forDuration: 1),
+			.group([
+				.scaleBy(
+					x: pow(xScale, -2/3.0), y: pow(yScale, -1/4.0),
+					using: .init(
+						duration: 1.5,
+						dampingRatio: 0.4,
+						initialVelocity: -10
+					)
+				),
+				.scaleBy(
+					x: pow(xScale, -1/3.0), y: pow(yScale, -3/4.0),
+					using: .init(
+						duration: 4,
+						dampingRatio: 0.2,
+						initialVelocity: 0
+					)
+				),
+			]),
+		]))
 	}
 	
 	required init?(coder: NSCoder) {
@@ -83,10 +110,8 @@ final class Scene: SKScene {
 	func animate(dampingRatio: CGFloat) {
 		let settings = SKAction.SpringAnimationSettings(
 			duration: 1,
-			springProperties: .init(
-				dampingRatio: dampingRatio,
-				initialVelocity: 0
-			)
+			dampingRatio: dampingRatio,
+			initialVelocity: 0
 		)
 		node.run(.moveBy(x: 0, y: (shouldMoveUp ? 1 : -1) * 8 * unit, using: settings))
 		shouldMoveUp.toggle()

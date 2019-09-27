@@ -14,8 +14,8 @@
 		95D6EDD9233D0030000AD540 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95D6EDD8233D0030000AD540 /* Assets.xcassets */; };
 		95D6EDDC233D0030000AD540 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 95D6EDDA233D0030000AD540 /* LaunchScreen.storyboard */; };
 		95D6EDE4233D05B1000AD540 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D6EDE3233D05B0000AD540 /* Operators.swift */; };
-		95D6EDE7233D061F000AD540 /* Spring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D6EDE6233D061F000AD540 /* Spring.swift */; };
-		95D6EDE9233D6A39000AD540 /* Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D6EDE8233D6A39000AD540 /* Convenience.swift */; };
+		95D6EE07233E44C1000AD540 /* Spring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D6EE05233E44C1000AD540 /* Spring.swift */; };
+		95D6EE08233E44C1000AD540 /* Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D6EE06233E44C1000AD540 /* Convenience.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,8 +28,8 @@
 		95D6EDDB233D0030000AD540 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		95D6EDDD233D0030000AD540 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		95D6EDE3233D05B0000AD540 /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
-		95D6EDE6233D061F000AD540 /* Spring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spring.swift; sourceTree = "<group>"; };
-		95D6EDE8233D6A39000AD540 /* Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Convenience.swift; sourceTree = "<group>"; };
+		95D6EE05233E44C1000AD540 /* Spring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spring.swift; sourceTree = "<group>"; };
+		95D6EE06233E44C1000AD540 /* Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Convenience.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,7 +46,7 @@
 		95D6EDC3233D002F000AD540 = {
 			isa = PBXGroup;
 			children = (
-				95D6EDE5233D061F000AD540 /* SpriteKit-Spring */,
+				95D6EE04233E44C1000AD540 /* SpriteKitSpring */,
 				95D6EDCE233D002F000AD540 /* Spring Testing */,
 				95D6EDCD233D002F000AD540 /* Products */,
 			);
@@ -75,14 +75,14 @@
 			path = "Spring Testing";
 			sourceTree = "<group>";
 		};
-		95D6EDE5233D061F000AD540 /* SpriteKit-Spring */ = {
+		95D6EE04233E44C1000AD540 /* SpriteKitSpring */ = {
 			isa = PBXGroup;
 			children = (
-				95D6EDE8233D6A39000AD540 /* Convenience.swift */,
-				95D6EDE6233D061F000AD540 /* Spring.swift */,
+				95D6EE05233E44C1000AD540 /* Spring.swift */,
+				95D6EE06233E44C1000AD540 /* Convenience.swift */,
 			);
-			name = "SpriteKit-Spring";
-			path = "../Sources/SpriteKit-Spring";
+			name = SpriteKitSpring;
+			path = ../Sources/SpriteKitSpring;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -157,8 +157,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				95D6EDD4233D002F000AD540 /* ViewController.swift in Sources */,
-				95D6EDE9233D6A39000AD540 /* Convenience.swift in Sources */,
-				95D6EDE7233D061F000AD540 /* Spring.swift in Sources */,
+				95D6EE08233E44C1000AD540 /* Convenience.swift in Sources */,
+				95D6EE07233E44C1000AD540 /* Spring.swift in Sources */,
 				95D6EDE4233D05B1000AD540 /* Operators.swift in Sources */,
 				95D6EDD0233D002F000AD540 /* AppDelegate.swift in Sources */,
 				95D6EDD2233D002F000AD540 /* SceneDelegate.swift in Sources */,
