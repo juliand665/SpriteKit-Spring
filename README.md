@@ -5,47 +5,35 @@ SpriteKit-Spring is a set of extensions to perform spring animations with Sprite
 
 ## Installation
 
-### iOS 7
-
-If you need to support iOS 7, you can just drop [SpriteKit-Spring.swift](SpriteKit-Spring.swift) in your project.
-
-### iOS 8
-
-If you support iOS 8 only, you can install SpriteKit-Spring as a framework with [CocoaPods](https://cocoapods.org) (version 0.36 or above) by adding the following lines to your ```Podfile```:
-
-```
-use_frameworks!
-
-pod 'SpriteKit-Spring'
-```
-
-You then need to import SpriteKit-Spring wherever you want to use it:
+This project uses the Swift Package Manager. Simply add `.package(url: "https://github.com/juliand665/SpriteKit-Spring.git", .branch("master"))` to the `dependencies` in your `Package.swift` file.
 
 #### Swift:
 ```swift
 import SpriteKit_Spring
 ```
-#### Objective-C:
-```objective-c
-#import <SpriteKit_Spring/SpriteKit_Spring-Swift.h>
-```
-
 ## Usage
 
 In iOS 7, Apple introduced spring animations in UIKit by adding a new animation method on UIView (see [WWDC video](https://developer.apple.com/videos/wwdc/2014/#221) and [UIView documentation](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIView_Class/index.html#//apple_ref/occ/clm/UIView/animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:)).
 
-This library replicates this feature by adding a spring variant to most factory methods of SKAction. The parameters ```usingSpringWithDamping:``` and ```initialSpringVelocity:``` have the same meaning as their UIKit counterpart. See below for examples.
+This library replicates this feature by adding a spring variant to most factory methods of SKAction. It's not perfect, but it aims to mimic UIKit behavior as closely as possible.
+
+See below for examples.
 
 ## Examples
 
 ### Move
 
 ```swift
-let move = SKAction.moveByX(0, y: 200, 
-  duration: 5, delay: 5,
-  usingSpringWithDamping: 0.2, initialSpringVelocity: 0)
-  
-node.runAction(move)
+node.run(
+	.moveBy(
+		x: 0, y: 200,
+		using: SKAction.SpringAnimationSettings(
+			duration: 5,
+			dampingRatio: 0.2,
+			initialVelocity: 0
+		)
+	)
+)
 ```
 
 ![Move](https://ataugeron.github.io/SpriteKit-Spring/bounce_1.gif)
@@ -53,11 +41,16 @@ node.runAction(move)
 ### Scale
 
 ```swift
-let scale = SKAction.scaleXTo(2, y: 0.5,
-  duration: 5, delay: 5,
-  usingSpringWithDamping: 0.2, initialSpringVelocity: 0)
-  
-node.runAction(scale)
+node.run(
+	.scaleTo(
+		x: 0, y: 200,
+		using: SKAction.SpringAnimationSettings(
+			duration: 5,
+			dampingRatio: 0.2,
+			initialVelocity: 0
+		)
+	)
+)
 ```
 
 ![Scale](https://ataugeron.github.io/SpriteKit-Spring/bounce_2.gif)
@@ -65,23 +58,29 @@ node.runAction(scale)
 ### Rotate
 
 ```swift
-let rotate = SKAction.rotateByAngle(CGFloat(M_PI/2),
-  duration: 5, delay: 5,
-  usingSpringWithDamping: 0.2, initialSpringVelocity: 0)
-  
-node.runAction(rotate)
+node.run(
+	.rotate(
+		byAngle: .pi / 2,
+		using: SKAction.SpringAnimationSettings(
+			duration: 5,
+			dampingRatio: 0.2,
+			initialVelocity: 0
+		)
+	)
+)
 ```
 
 ![Rotate](https://ataugeron.github.io/SpriteKit-Spring/bounce_3.gif)
 
 ## Notes
 
-- Because they use ```customActionWithDuration:actionBlock:```, none of these actions is reversible (the reverse action performs the same animation).
-- All these factory methods are based on the lower level ```animateKeyPath:byValue:duration:delay:usingSpringWithDamping:initialSpringVelocity:``` and ```animateKeyPath:toValue:duration:delay:usingSpringWithDamping:initialSpringVelocity:``` methods, which can animate any CGFloat key path. If you have a SKNode subclass with a fancy CGFloat property that you'd like to animate, feel free to use these methods!
+- Because they use `customAction(withDuration:actionBlock:)`, none of these actions are reversible (the reverse action performs the same animation).
+- All these factory methods are based on the lower-level `animate(_:_:using:)` method, which can animate any CGFloat key path. If you have an SKNode subclass with a fancy CGFloat property that you'd like to animate, feel free to use these methods!
 
-## Creator
+## Credits
 
-- [Alexis Taugeron](http://alexistaugeron.com) ([@ataugeron](https://twitter.com/ataugeron))
+- Original Creator: [Alexis Taugeron](http://alexistaugeron.com) ([@ataugeron](https://twitter.com/ataugeron))
+- Refactor & SwiftPM Support: [Julian Dunskus](https://github.com/juliand665) ([@juliand665](https://twitter.com/juliand665))
 
 ## License
 
