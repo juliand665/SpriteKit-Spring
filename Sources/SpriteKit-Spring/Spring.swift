@@ -9,8 +9,23 @@ public extension SKAction {
 		let function = Spring.timingFunction(with: settings.springProperties)
 		let duration = CGFloat(settings.duration)
 		let applier = transformation.valueApplier(on: keyPath)
+		let easingFactor = easingFunction(portion: 1.0)
+		
 		return .customAction(withDuration: settings.duration) { node, elapsedTime in
-			applier(node as! Node, function(elapsedTime / duration))
+			let time = elapsedTime / duration
+			let springValue = function(time)
+			let eased = springValue + easingFactor(time) * (1 - springValue)
+			applier(node as! Node, eased)
+		}
+	}
+	
+	/// - Parameter portion: the fraction of the time to ease for (from the end, so e.g. 0.2 means we ease from 0.8 to 1.0)
+	private static func easingFunction(portion: CGFloat) -> ((CGFloat) -> CGFloat) {
+		let easingScaling = 0.5 * .pi
+		return { time in
+			guard time > 1 - portion else { return 0 }
+			let offsetTime = (time + portion - 1) / portion
+			return 1 - cos(easingScaling * portion * offsetTime)
 		}
 	}
 	
@@ -117,14 +132,15 @@ public enum Spring {
 		case overdamped(_ ratio: CGFloat)
 		
 		var naturalFrequency: CGFloat {
-			// picked manually to visually match the behavior of UIKit
+			// picked manually to visually approximate the behavior of UIKit (with duration 1, if that matters)
+			let base = 9.2
 			switch self {
 			case .underdamped(let ratio):
-				return 8 / ratio
+				return base * (1 + 3.71 * pow(1 - ratio, 3.46))
 			case .criticallyDamped:
-				return 10
+				return base
 			case .overdamped(let ratio):
-				return 12 * ratio
+				return base * pow(ratio, 0.6)
 			}
 		}
 		
