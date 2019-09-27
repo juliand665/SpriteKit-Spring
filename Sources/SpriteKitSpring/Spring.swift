@@ -59,10 +59,8 @@ public extension SKAction {
 			case .change(to: let finalValue): // ends up at finalValue regardless of interference from other sources
 				var _initialValue: CGFloat?
 				return { node, springValue in
-					guard let initialValue = _initialValue else {
-						_initialValue = node[keyPath: keyPath]
-						return
-					}
+					let initialValue = _initialValue ?? node[keyPath: keyPath]
+					_initialValue = initialValue
 					node[keyPath: keyPath] = initialValue + springValue * (finalValue - initialValue)
 				}
 				
