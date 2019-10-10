@@ -23,6 +23,8 @@ While generally `SKAction`s are expected to be reusable, that is all but impossi
 
 ## Examples
 
+You can find an example of how to use this library (including a comparison to UIKit springs) at [juliand665/SpriteKitSpring-Example](https://github.com/juliand665/SpriteKitSpring-Example).
+
 ### Move
 
 ```swift
